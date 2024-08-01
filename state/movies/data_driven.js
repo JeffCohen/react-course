@@ -8,7 +8,15 @@ data = [
 ]
 
 const renderMovies = function () {
-  // TO DO
+  const content = document.querySelector("#movie-template").content
+  const app = document.querySelector("#app")
+  data.forEach((movie) => {
+    const newMovie = content.cloneNode(true)
+    newMovie.querySelector('h2').textContent = movie.title
+    newMovie.querySelector('img').src = movie.img
+    newMovie.querySelector('p').textContent = movie.desc
+    app.appendChild(newMovie)
+  })
 }
 
 document.addEventListener("DOMContentLoaded", renderMovies)
