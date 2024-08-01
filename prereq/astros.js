@@ -14,20 +14,26 @@ function extractName(person) {
   return person.name
 }
 
-async function getAstronauts(e) {
-  const httpResponse = await fetch("http://api.open-notify.org/astros.json")  // GET  
-  let data = await httpResponse.json()
-  console.log(data)
+function getAstronauts(e) {
+  console.log("started")
+  setTimeout(() => { console.log("ok") }, 5000)
+  while (true) {
 
-  const people = data.people
+  }
+  console.log("finished")
+  // const httpResponse = await fetch("http://api.open-notify.org/astros.json")  // GET  
+  // let data = await httpResponse.json()
+  // console.log(data)
+
+  // const people = data.people
 
   // people.map { |person| person.name }
   
-  const names = people.map(person => person.name)
+  // const names = people.map(person => person.name)
 
   // console.log(names)
 
-  people.forEach(person => { console.log(person.name); return ... })                            
+  // people.forEach(person => { console.log(person.name); return ... })                            
                                 // people.each do |person|
                                 //   puts person.name
                                 // end

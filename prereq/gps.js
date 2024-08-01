@@ -1,5 +1,5 @@
 // Your code goes here
-const MAPS_API_KEY="AIzaSyCCP20OMYfZgUwnj0636yv9EA74jG3u8ys"
+const MAPS_API_KEY=""
 
 function onDocumentLoaded() {
   document.querySelector("#get-location").addEventListener("click", function(e) {
