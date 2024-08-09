@@ -1,59 +1,36 @@
 // TO DO: breakout, keys for render recognition, likes, [state up, comms down], forms?
 import { React, useState } from 'react';
 
-function Movie(props) {
-  return (
-    <div className="col-sm-3 text-center mb-2 poster">
-      <img src={'http://image.tmdb.org/t/p/w185' + props.poster_path} className="img-fluid" alt={props.title} />
+import Movie from './Movie.js' 
 
-      <p className="mt-2">
-        {props.release_date ? props.release_date.substr(0, 4) : null}
-        <span className="badge bg-primary mx-3">
-          {props.vote_average.toFixed(1)}
-        </span>
-        <LikeButton/>
-      </p>
-    </div>
-  )
-}
-
-function LikeButton(props) {
-
-  const [counter, setCounter] = useState(0)  // "hook" function
-
-  function handleClick(event) {  // Closure
-    console.log(event)
-    setCounter(counter + 1)
-  }
-
-  return (
-    <button onClick={handleClick} className="text-decoration-none btn text-danger ">&hearts; <span>{counter}</span></button>
-  )
-}
-
-
-function App() {
-  const initialData = [
+function initialData() {
+  return [
     { title: "The Princess Bride", poster_path: '/dvjqlp2sAhUeFjUOfQDgqwpphHj.jpg', release_date: '1999', vote_average: 10 },
     { title: "Spider - Man", poster_path: '/gh4cZbhZxyTbgxQPxD0dOudNPTn.jpg', release_date: '1999', vote_average: 10 },
     { title: "Star Wars", poster_path: '/6FfCtAuVAW8XJjZ7eWeLibRLWTw.jpg', release_date: '1999', vote_average: 10 },
-    { title: "Jurassic Park", poster_path: 'https://image.tmdb.org/t/p/w185//b1xCNnyrPebIc7EWNZIa6jhb1Ww.jpg', release_date: '1993', vote_average: 10 },
+    { title: "Jurassic Park", poster_path: '/b1xCNnyrPebIc7EWNZIa6jhb1Ww.jpg', release_date: '1993', vote_average: 10 },
     { title: "Doctor Strange", poster_path: '/7WfK17BXE6szXlm4WOxfswgbdsL.jpg', release_date: '1999', vote_average: 10 },
     { title: "Apollo 13", poster_path: '/kzj95o9FlVxKziQq36mjES3wxel.jpg', release_date: '1999', vote_average: 10 },
     { title: "The Matrix", poster_path: '//f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg', release_date: '1999', vote_average: 10 },
     { title: "Toy Story", poster_path: '/uXDfjJbdP4ijW5hWSBrPrlKpxab.jpg', release_date: '1999', vote_average: 10 },
   ]
+}
 
-  const [data, setData] = useState(initialData)
+function App() {
   
-  const movies = data.map(movie_data => <Movie title={movie_data.title} release_date={movie_data.release_date} poster_path={movie_data.poster_path} vote_average={movie_data.vote_average} />)
-
+  const [data, setData] = useState(initialData)
+  const [likes, setLikes] = useState( { } )  
+  
   function handleNowPlayingClick(event) {
     event.preventDefault()
     const url = urlForMovies("now_playing")
     fetch(url).then(r => r.json()).then(api_data => setData(api_data.results))
   }
 
+  function handleOurMovies(event) {
+    event.preventDefault()
+    setData(initialData)
+  }
 
   function handleTopRatedClick(event) {
     event.preventDefault()
@@ -63,6 +40,21 @@ function App() {
       setData(api_data.results)
     })
   }
+
+  function incrementLikes(title) {
+    console.log(title, "was liked!")
+    // { "Apollo 13": 100, "Princess Bride": 2, "Apollo 13": 101}
+    const currentLikeCount = likes[title] || 0
+    const newLikeCount = currentLikeCount + 1
+    let newObj = { }
+    newObj[title] = newLikeCount
+    const newLikes = { ...likes, ...newObj }
+    setLikes(newLikes)
+  }
+
+  // document.querySelectorAll(".like").forEach((element) => element.addEventListener("click", handleClickThing))
+
+  const movies = data.map(movie_data => <Movie onLikeClicked={() => { incrementLikes(movie_data.title) }} likes={likes[movie_data.title] || 0} key={movie_data.poster_path} title={movie_data.title} release_date={movie_data.release_date} poster_path={movie_data.poster_path} vote_average={movie_data.vote_average} />)
 
   return (
     <div>
@@ -75,6 +67,7 @@ function App() {
         <p className="mt-2">
           <button onClick={handleTopRatedClick} className="btn btn-primary" >Top-Rated Movies</button>
           <button onClick={handleNowPlayingClick} className="btn btn-primary ms-3">Now Playing</button>
+          <button onClick={handleOurMovies} className="btn btn-primary ms-3">Our Movies</button>
         </p>
       </header>
 

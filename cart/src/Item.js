@@ -5,7 +5,7 @@ export default function Item(props) {
 
   function increaseQty(event) {
     event.preventDefault()
-    setQty(qty + 1) 
+    setQty(qty + 1) // Queues a message to set the quantity when the call stack is done
     props.onItemChanged({ name: props.name, qty: qty + 1, price: props.price });
   }
 
